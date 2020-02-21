@@ -1,7 +1,8 @@
 defmodule Test.Briefly do
   use ExUnit.Case, async: true
 
-  @prefix "temp"
+  @prefix "complex - temp_filename - (with parens)"
+  @backslash_prefix "whatever 10/17/2019 - 10/22/2019 "
   @fixture "content"
   @extname ".tst"
 
@@ -64,6 +65,15 @@ defmodule Test.Briefly do
       spawn_monitor(fn ->
         {:ok, path} = Briefly.create(prefix: @prefix)
         assert Path.basename(path) |> String.starts_with?(@prefix <> "-")
+      end)
+  end
+
+  test "handles prefix with backslashes" do
+    {_pid, _ref} =
+      spawn_monitor(fn ->
+        {:ok, path} = Briefly.create(prefix: @backslash_prefix)
+
+        assert Path.basename(path) |> String.starts_with?(@backslash_prefix <> "-")
       end)
   end
 
